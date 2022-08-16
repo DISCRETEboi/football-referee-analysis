@@ -23,9 +23,7 @@ get_data <- function(data_url, season_initial, season_final) {
   }
 }
 read_data <- function(data_path) {
-  #message("Data ", data_path, " reading")
   readr::read_csv(str_c("premier-league-data/", data_path), show_col_types = F)
-  #read.csv(str_c("premier-league-data/", data_path))
 }
 
 urls <- mapply(get_url, season_initial, season_final)
@@ -54,3 +52,13 @@ agg_data <- data_list[[1]]
 for (i in data_list[-1]) {
   agg_data <- rbind(agg_data, i)
 }
+
+write.csv(agg_data, "aggregated-data.csv", row.names = F)
+
+
+
+
+
+
+
+
