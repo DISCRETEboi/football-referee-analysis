@@ -23,7 +23,7 @@ get_data <- function(data_url, season_initial, season_final) {
   }
 }
 read_data <- function(data_path) {
-  read.csv(str_c("premier-league-data/", data_path))
+  readr::read_csv(str_c("premier-league-data/", data_path)) #mod
 }
 
 urls <- mapply(get_url, season_initial, season_final)
@@ -41,9 +41,16 @@ for (i in data_list[-1]) {
 }
 
 for (i in seq_along(data_list)) {
-  data_list[[i]] <- data_list[[i]][, common_fields]
+  data_list[[i]] <- data_list[[i]][, common_fields[-1]]
+  season <- rep(names(data_list)[i], nrow(data_list[[i]]))
+  data_list[[i]] <- cbind(season, data_list[[i]])
+  #data_list[[i]] <- na.omit(data_list[[i]]) #mod
 }
 
+agg_data <- data_list[[1]]
+for (i in data_list[-1]) {
+  agg_data <- rbind(agg_data, i)
+}
 
 
 
