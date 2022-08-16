@@ -5,6 +5,7 @@ library(stringr)
 #library(ggplot2)
 #library(magrittr)
 
+### data collection
 season_initial <- 0:22 %>% str_pad(width = 2, side = "left", pad = "0")
 season_final <- (as.numeric(season_initial) + 1) %>% str_pad(width = 2, side = "left", pad = "0")
 seasons <- list(initial = season_initial, final = season_final)
@@ -21,9 +22,50 @@ get_data <- function(data_url, season_initial, season_final) {
     message(str_c("The download of dataset for the season ", season_initial, "-", season_final, " was successful!"))
   }
 }
+read_data <- function(data_path) {
+  read.csv(str_c("premier-league-data/", data_path))
+}
 
 urls <- mapply(get_url, season_initial, season_final)
 invisible(mapply(get_data, urls, season_initial, season_final))
+
+### data wrangling
+data_files <- list.files("premier-league-data")
+data_list <- lapply(data_files, read_data)
+names(data_list) <- str_extract(data_files, "[0-9]+-[0-9]+")
+
+common_fields <- names(data_list[[1]])
+for (i in data_list[-1]) {
+  data_fields <- names(i)
+  common_fields <- base::intersect(common_fields, data_fields)
+}
+
+for (i in seq_along(data_list)) {
+  data_list[[i]] <- data_list[[i]][, common_fields]
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
