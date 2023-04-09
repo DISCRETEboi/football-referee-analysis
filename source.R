@@ -6,7 +6,7 @@ library(ggplot2)
 #library(magrittr)
 
 ### data collection
-season_initial <- 0:22 %>% str_pad(width = 2, side = "left", pad = "0")
+season_initial <- 21:22 %>% str_pad(width = 2, side = "left", pad = "0")
 season_final <- (as.numeric(season_initial) + 1) %>% str_pad(width = 2, side = "left", pad = "0")
 seasons <- list(initial = season_initial, final = season_final)
 
@@ -114,9 +114,10 @@ chelsea_refs <- group_by(chelsea, referee) %>%
             no_of_red_cards_pm = round(sum(home_red_cards, away_red_cards) / length(full_time_result), 2)) %>%
   filter(no_of_matches >= 10) %>%
   arrange(desc(win_pct))
-ggplot(chelsea_refs, aes(x = reorder(referee, no_of_matches), y = no_of_matches)) +
+p1 <- ggplot(chelsea_refs, aes(x = reorder(referee, no_of_matches), y = no_of_matches)) +
   geom_col(fill = ifelse(chelsea_refs$referee == "A Taylor", "red", "blue")) +
   coord_flip()
+print(p1)
 ggplot(chelsea_refs, aes(x = reorder(referee, no_of_red_cards_pm), y = no_of_red_cards_pm)) +
   geom_col(fill = ifelse(chelsea_refs$referee == "A Taylor", "red", "blue")) +
   coord_flip()
